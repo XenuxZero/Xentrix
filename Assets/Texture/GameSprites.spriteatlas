@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: GameSprites
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 2
+      m_BuildTarget: Android
+      m_MaxTextureSize: 64
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 47
+      m_TextureCompression: 1
+      m_CompressionQuality: 100
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 2
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 0
+    variantMultiplier: 1
+    packables:
+    - {fileID: 21300000, guid: 9c72224d916164f47b6a2c09c7b746f4, type: 3}
+    - {fileID: 21300000, guid: c6af8b4e9f7e97147a46611bec45c877, type: 3}
+    - {fileID: 21300000, guid: e4ff80f54c54f5c45bb93b24340c5e92, type: 3}
+    - {fileID: 21300000, guid: d0751cc785191ca4bbdcac39a63a13db, type: 3}
+    - {fileID: 21300000, guid: 42d67d25419670a49981a0682405484d, type: 3}
+    - {fileID: 21300000, guid: d8db1e67e6191b2419ffafd3f5d7f81c, type: 3}
+    - {fileID: 21300000, guid: f557476de4a37e04e835eb1b3e1bf26c, type: 3}
+    - {fileID: 21300000, guid: c3ed785cb3975cf45804ea9315db0b32, type: 3}
+    - {fileID: 21300000, guid: 3079066544d9b8349886638ce8a2e10e, type: 3}
+    totalSpriteSurfaceArea: 29712
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 42d67d25419670a49981a0682405484d, type: 3}
+  - {fileID: 21300000, guid: 3079066544d9b8349886638ce8a2e10e, type: 3}
+  - {fileID: 21300000, guid: e4ff80f54c54f5c45bb93b24340c5e92, type: 3}
+  - {fileID: 21300000, guid: d8db1e67e6191b2419ffafd3f5d7f81c, type: 3}
+  - {fileID: 21300000, guid: d0751cc785191ca4bbdcac39a63a13db, type: 3}
+  - {fileID: 21300000, guid: c3ed785cb3975cf45804ea9315db0b32, type: 3}
+  - {fileID: 21300000, guid: 9c72224d916164f47b6a2c09c7b746f4, type: 3}
+  - {fileID: 21300000, guid: f557476de4a37e04e835eb1b3e1bf26c, type: 3}
+  - {fileID: 21300000, guid: c6af8b4e9f7e97147a46611bec45c877, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - Drop_tx
+  - Mino
+  - Right_tx
+  - Mute_tx
+  - Down_tx
+  - Tetrimino_texture
+  - Rotate_tx
+  - UnMute_tx
+  - Left_tx
+  m_Tag: GameSprites
+  m_IsVariant: 0
