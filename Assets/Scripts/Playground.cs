@@ -30,7 +30,6 @@ public class Playground : MonoBehaviour //NUEVA CLASE "Playground" HIJA DE LA CL
     private short currentLevel; // AQUÍ SE GUARDARÁ EL NIVEL ACTUAL. A TIEMPO DE REAL.
     private short maxLevel; // DEFINIREMOS EL MÁXIMO NIVEL POSIBLE EN EL JUEGO.
     private int scoreValue; // IRÁ LA PUNTUACIÓN A TIEMPO REAL. UN ENTERO, PUES EL SHORT SE QUEDARÁ IDEM... JE!
-    private int totalLines; // LA CANTIDAD DE LÍNEAS HECHAS POR EL JUGADOR. UN ENTERO, POR SI ACASO EL JUGADOR ES UN HACHA.
     private int nTimesLevelScore; // CUENTA LAS VECES QUE PASAMOS DE PUNTUACIÓN (10000) COMO PARA UNA SUBIDA DE NIVEL.
 
     [Header("Botones")]
@@ -96,7 +95,6 @@ public class Playground : MonoBehaviour //NUEVA CLASE "Playground" HIJA DE LA CL
     private int blockSelected; // AQUÍ SE GUARDA EL TETRIMINO SELECCIONADO.
 
     [Header("Sprites Estéticos")]
-    public Sprite tetrimino_graph; /* REFERENCIA AL SPRITE QUE HACE DE TEXTURA PARA LOS "LADRILLOS" DE LOS TETRIMINOS. */
     public Sprite unMute_graph; /* REFERENCIA AL SPRITE DE UNMUTE PARA EL BOTÓN DE SILENCIAR MÚSICA. */
     public Sprite mute_graph; /* LO MISMO PERO PARA MUTE */
 
@@ -133,6 +131,8 @@ public class Playground : MonoBehaviour //NUEVA CLASE "Playground" HIJA DE LA CL
                                                           PARA UN LADO. ASÍ QUE ESTAS VARIABLES SERÁN SU LIMITADOR DE PULSACIÓN.*/
 
     private bool isTactile; /* DETERMINAREMOS SI XENTRIX SE EJECUTA EN UN DISPOSITIVO TACTIL (MOVIL) O NO (PC) */
+    private bool check;
+    private bool isHit, isHit2;
 
     /* ------------------- FUNCIONES DE EJECUCIÓN O MÉTODOS DE CLASE HEREDADAS DE MONOBEHAVIOR ------------------- */
 
@@ -164,7 +164,6 @@ public class Playground : MonoBehaviour //NUEVA CLASE "Playground" HIJA DE LA CL
         elapsedTime = 0f; // TIEMPO TRANSCURRIDO A 0.0.
         speedUpTime = 0.025f; // TIEMPO DE ACORTE DE TIC DE RELOJ PARA IR MÁS RÁPIDO CADA VEZ QUE PASAS DE NIVEL.
         scoreValue = 0; // VALOR DE PUNTUACIÓN A 0.
-        totalLines = 0; // LÍNEAS TOTALES A 0.
         nTimesLevelScore = 0; // 0 VECES PASAMOS LA PUNTUACIÓN DE 10000.
         nBlocks = (short) prefabs.Length; // NÚMERO DE TETRIMINOS QUE ENTRARÁN EN JUEGO, ASÍ AÑADÍ EL PEQUEÑO. PUEDES AÑADIR LOS QUE QUIERAS.
         newTetrimino = null; // INICIALIZO LA PIEZA JUGABLE A NULO.
@@ -191,8 +190,12 @@ public class Playground : MonoBehaviour //NUEVA CLASE "Playground" HIJA DE LA CL
         lvlUnidades.text = unidades.ToString(); // ESTABLEZCO EL DÍGITO DE LAS UNIDADES AL VALOR DE LAS UNIDADES.
         multiplier.gameObject.SetActive(false); // MIENTRAS QUE NO ESTÉ EN MODO BONUS, QUE NO APAREZCA EL TESTIGO DE MULTIPLICADOR.
         bonusFontSize = 10; // ESTABLECER EL TAMAÑO DEL TEXTO DEL TESTIGO GRÁFICO DEL BONUS MULTIPLICADOR.
-        isJoyAxisXPressed = false;
+        isJoyAxisXPressed = false; // VARIABLES PARA CONVERTIR LA CRUCETA EN PULSACIONES DIGITALES.
         isJoyAxisYPressed = false;
+
+        check = false; // VARIABLE QUE USARÉ PARA DETERMINAR SI HAY OBSTÁCULOS DELANTE DE UN TETRIMINO ANTES DE MOVERSE.
+
+        isHit = isHit2 = false; // VARIABLES QUE USO COMO ROTURAS DE WHILES INFINITOS.
 
         gameOver.SetActive(isGameOver); // ACTIVA LA PANTALLA DE GAME OVER SEGÚN EL ESTADO isGameOver.    
         resume.SetActive(isPaused); // ACTIVA LA PANTALLA DE PAUSA SEGÚN EL ESTADO isPaused.
@@ -266,14 +269,6 @@ public class Playground : MonoBehaviour //NUEVA CLASE "Playground" HIJA DE LA CL
 
             SubControls(); /* ACTIVO LOS SUBCONTROLES, QUE NO SON MÁS QUE LLAMADAS A CONTROLES SUELTOS */
         }
-    }
-
-    private void LateUpdate() /* ESTA FUNCIÓN ESPECÍFICA DE UNITY SE EJECUTA DESPUÉS DE UPDATE, SIRVE PARA EL TRACKING DE CÁMARAS Y ALGUNAS COSAS
-                                 MÁS, QUE NECESITAN PRECISIÓN DE SEGUIMIENTO, ASÍ QUE PARA ARREGLAR EL GLITCH DEL TETRIMINO PENETRADOR DE PAREDES
-                                 CHEQUEO LOS LÍMITES AQUÍ, PARA QUE UNA VEZ QUE EL TETRIMINO ENTRE FUERA DE LA PARED, JUSTO DESPUÉS, LO ESCUPA.
-                                 HASTA AHORA NO ME HA DADO MÁS ERRORES...*/
-    {
-        CheckPlaygroundLimits();
     }
 
     /* ------------------- FUNCIONES O MÉTODOS DE CLASE PLAYGROUND ------------------- */
@@ -389,20 +384,7 @@ public class Playground : MonoBehaviour //NUEVA CLASE "Playground" HIJA DE LA CL
             minosHelper[i] = tetriminoHelper.GetChild(i); /* LO MISMO QUE LO ANTERIOR PERO PARA EL AYUDANTE. */
         }
 
-        ConfigTetrimino(); /* FUNCIÓN PARA CONFIGURAR VISUALMENTE EL TETRIMINO DEL JUGADOR. */
         ConfigHelper(); /* LO MISMO, PERO PARA EL AYUDANTE. */
-    }
-
-    private void ConfigTetrimino() /* ESTA FUNCIÓN, APLICA EL SPRITE DE LADRILLO A LOS TETRIMINOS. */
-    { 
-        if (tetrimino_graph != null) /* PRIMERO COMPRUEBO SI ESTÁ DISPONIBLE EL SPRITE, POR SI SE HA TRASCONEJADO, NO DE
-                                        ERROR Y NO SE PUEDA JUGAR, SI NO ENCONTRARA EL SPRITE, USARÍA EL COLOR ESTANDAR. */
-        {
-            for (short i = 0; i < minos.Length; i++) /* POR CADA MINO DEL TETRIMINO... */
-            {
-                minos[i].GetComponent<SpriteRenderer>().sprite = tetrimino_graph; /* ESTABLECE EL SPRITE A CADA MINO. */
-            }
-        }
     }
 
     private void ConfigHelper() /* ESTA FUNCIÓN CAMBIA EL COLOR DE LA COPIA DEL TETRIMINO (AYUDANTE) PARA QUE PAREZCA
@@ -428,34 +410,26 @@ public class Playground : MonoBehaviour //NUEVA CLASE "Playground" HIJA DE LA CL
         tetriminoHelper.position = newTetrimino.position; /* LA POSICIÓN DEL AYUDANTE ES LA MISMA QUE LA DEL JUGADOR... */
         tetriminoHelper.rotation = newTetrimino.rotation; /* QUE LA ROTACIÓN TAMBIÉN SEA LA MISMA... */
 
-        bool isHit = false; /* ESTA VARIABLE IGUAL NO ES NECESARIA, PERO LOS WHILE EN BUCLE INFINITO ME DAN URTICARIA.
-                               ASÍ QUE LES PONGO UN STOP EN FORMA DE BOOL. DIGO QUE NO ES NECESARIA PORQUE LOS "return"
-                               CORTAN POR OBLIGACIÓN LOS WHILE Y TODA LA JODIDA FUNCIÓN SI ES NECESARIA. */
+        for (int i = 0; i < minos.Length; i++) /* GIRO LOS SPRITES DE CADA MINO DEL AYUDANTE PARA QUE MIREN HACIA EL MISMO
+            SITIO QUE EL ORIGINAL. */
+        {
+            minosHelper[i].rotation = minos[i].rotation;
+        }
+
+        isHit = false;
 
         while (!isHit) /* MIENTRAS SEA FALSE... */
         {
             foreach (Transform h in minosHelper) /* POR CADA MINO DEL AYUDANTE... */
             {
-                if (h.position.y > 0 && h.position.x < alto && h.position.x > 0) /* SI ESTÁN DENTRO DEL ESCENARIO... */
+                if (h.position.y - 1 < 0 || playground[Mathf.FloorToInt(h.position.x), Mathf.FloorToInt(h.position.y - 1)] != null) /* SI TOCAN
+                                                                                                            UNA PIEZA
+                                                                                                            YA
+                                                                                                            ESTABLECIDA...*/
                 {
-                    if (playground[Mathf.FloorToInt(h.position.x), Mathf.FloorToInt(h.position.y)] != null) /* SI TOCAN
-                                                                                                               UNA PIEZA
-                                                                                                               YA
-                                                                                                               ESTABLECIDA...*/
-                    {
-                        tetriminoHelper.position += Vector3Int.up; /* QUE EL AYUDANTE SUBA UNA UNIDAD. */
-                        isHit = true; /* DOY LA SALIDA AL WHILE... */
-                        return; /* AUNQUE DA IGUAL PORQUE ESTÁ ESTE... https://media1.tenor.com/images/93854108c6920a98072dff147604ec95/tenor.gif */
-                    }
-                }
-                else
-                {
-                    tetriminoHelper.position += Vector3Int.up; /* SI NO ESTÁ TOCANDO UNA PIEZA, ENTONCES ESTÁ TOCANDO EL BORDE
-                                                                  DEL ESCENARIO, PERO LA ACCIÓN SERÁ LA MISMA. PARRIBA.
-                                                                  QUE SIEMPRE VAYA HACIA ARRIBA LE DA UN COMPORTAMIENTO
-                                                                  ESCURRIDIZO, NO COMO EL TETRIMINO DEL JUGADOR.*/
-                    isHit = true; /* SALIDA PLACEBO. */
-                    return; /* SALIDA REAL <3 */
+
+                    isHit = true;
+                    return; /* AUNQUE DA IGUAL PORQUE ESTÁ ESTE... https://media1.tenor.com/images/93854108c6920a98072dff147604ec95/tenor.gif */
                 }
             }
 
@@ -541,9 +515,6 @@ public class Playground : MonoBehaviour //NUEVA CLASE "Playground" HIJA DE LA CL
                 QuitGame(); // "ESCAPE" O "START" Y "SELECT" A LA VEZ PARA SALIR DEL JUEGO.
             }
         }
-
-        CheckPlaygroundLimits(); /* OPTÉ POR ELIMINAR ESTA FUNCIÓN DEL UPDATE Y PONERLA AQUÍ PARA QUE SOLO CALCULE CUANDO TE MUEVAS,
-                                    ASÍ AHORRAMOS MUCHÍSIMA CARGA DE CPU... PARA EL MÓVIL, CLARO, EL PC NI SE INMUTA */
     }
 
     private void SubControls() /* ESTA NUEVA FUNCIÓN, DEJA ACTIVOS UNOS CUANTOS BOTONES PARA MOVERSE POR LOS MENÚS QUE DE OTRA
@@ -700,7 +671,6 @@ public class Playground : MonoBehaviour //NUEVA CLASE "Playground" HIJA DE LA CL
 
                 BlockFalling(y); /* ESTA FUNCIÓN SE ENCARGA DE COGER TODOS LOS MINOS QUE ESTÁN ENCIMA DE LA LÍNEA ELIMINADA Y BAJARLA
                                     COMO SI LA GRAVEDAD LES AFECTASE */
-                totalLines++; // LÍNEAS TOTALES +1, LAS CUENTO PERO NO LAS USO NI LAS REPRESENTO... PARA UN DLC YA SI ESO.
                 ScoreUp(LINEVALUE * bonusMultiplier); /* AÑADIMOS A LA PUNTUACIÓN EL VALOR DE UNA LÍNEA MULTIPLICADO POR EL
                                                          MULTIPLICADOR OBTENIDO. LA PRIMERA LÍNEA NO CUENTA, COMO ES LÓGICO. */
 
@@ -834,33 +804,47 @@ public class Playground : MonoBehaviour //NUEVA CLASE "Playground" HIJA DE LA CL
         {
             foreach(Transform m in minos) /* POR CADA MINO DEL TETRIMINO DEL JUGADOR HAZ... */
             {
-                if (m.position.x > 0) /* COMPRUEBA QUE NINGÚN MINO SE SALE DEL BORDE IZQUIERDO... */
+                if (m.position.x - 1 < 0 || playground[Mathf.FloorToInt(m.position.x - 1), Mathf.FloorToInt(m.position.y)] != null)
+                    /* COMPRUEBA SI NO SE HA SALIDO UN MINO DEL LÍMITE IZQUIERDO O HAY ALGO POR LA IZQUIERDA DEL MINO.
+                     COMO PUEDES VER, AHORA SE COMPRUEBA LO QUE HAY POR DELANTE DE CADA MOVIMIENTO Y, SI HAY ALGO, NO SE MUEVE
+                     EVITANDO ASÍ LAS INTERSECCIONES Y SALIDAS DE ESCENARIO, QUE AUNQUE ESTABAN GESTIONADAS, ERAN ILÓGICAS Y
+                     PERMITÍAN FUNCIONES DE COMPROBACIÓN COSTOSAS.*/
                 {
-                    if (playground[Mathf.FloorToInt(m.position.x), Mathf.FloorToInt(m.position.y)] != null)
-                        /* COMPRUEBA SI TOCA ALGÚN TETRIMINO YA ESTABLECIDO... */
-                    {
-                        newTetrimino.position += Vector3Int.right; /* Y COMO EL JUGADOR LE DIO A LA IZQ. CONTRARRESTA
-                                                                      HACIA LA DERECHA. AMBAS FUERZAS SE ANULAN Y EL
-                                                                      TETRIMINO QUEDA QUIETO. HACIENDO QUE PAREZCA QUE
-                                                                      SE HA TOPADO CONTRA UN MURO.*/
-                        break; /* break SIRVE PARA ROMPER LOS BUCLES Y SALIRSE DE ELLOS SIN MÁS ITERACIONES INNECESARIAS. */
-                    }
+                    check = true;
+                    break; /* SI UN SOLO MINO PILLA ALGO POR DELANTE, YA SEA UN LÍMITE U OTRO MINO... ROMPE EL FOREACH*/
                 }
+            }
+
+            if(check) /* SI SE TOPÓ CON ALGO DELANTE */
+            {
+                check = false; /* RESETEA EL CHECK */
+            }
+            else /* SI NO HAY NADA, PERMITE QUE LA PIEZA SE MUEVA */
+            {
+                newTetrimino.transform.position += Vector3.left; // MUEVE UNA UNIDAD A LA IZQ.
+                check = false;
             }
         }
         else if(dir.Equals("Right")) /* SI EL JUGADOR LE DA A LA DERECHA... */
         {
             foreach (Transform m in minos) /* POR CADA MINO... */
             {
-                if (m.position.x < ancho) /* COMPRUEBA SI NO HA TOPADO CON EL BORDE DERECHO DEL ESCENARIO... */
+                if (m.position.x + 1 > ancho || playground[Mathf.FloorToInt(m.position.x + 1), Mathf.FloorToInt(m.position.y)] != null)
+                    /* LA MISMA COMPROBACIÓN PERO POR EL LADO DERECHO */
                 {
-                    if (playground[Mathf.FloorToInt(m.position.x), Mathf.FloorToInt(m.position.y)] != null)
-                        /* SI TOCA UN TETRIMINO ESTABLECIDO... */
-                    {
-                        newTetrimino.position += Vector3Int.left; /* A LA IZQUIERDA PARA COMPENSAR... */
-                        break;
-                    }
+                    check = true;
+                    break;
                 }
+            }
+
+            if(check)
+            {
+                check = false;
+            }
+            else
+            {
+                newTetrimino.transform.position += Vector3.right; // MUEVE UNA UNIDAD A LA DER.
+                check = false;
             }
         }
 
@@ -871,16 +855,23 @@ public class Playground : MonoBehaviour //NUEVA CLASE "Playground" HIJA DE LA CL
         {
             foreach (Transform m in minos)
             {
-                if(m.position.y > 0) /* LOS MINOS NO ESTÁN TOCANDO EL SUELO? */
+                if (m.position.y - 1 < 0 || playground[Mathf.FloorToInt(m.position.x), Mathf.FloorToInt(m.position.y - 1)] != null)
+                    /* LO MISMO QUE EL ANTERIOR PERO POR ABAJO */
                 {
-                    if (playground[Mathf.FloorToInt(m.position.x), Mathf.FloorToInt(m.position.y)] != null)
-                        /* SI TOCA UN TETRIMINO CUANDO VA ABAJO... */
-                    {
-                        newTetrimino.position += Vector3Int.up; /* PARRIBA PARA QUE NO INTERSECTEN. */
-                        UpdatePlayground(); /* ESTABLECE EL TETRIMINO EN EL ESCENARIO... */
-                        break;
-                    }
+                    check = true;
+                    break;
                 }
+            }
+
+            if(check)
+            {
+                UpdatePlayground(); /* ESTA VEZ SI PILLAMOS ALGO, ESTABLECEMOS EL TETRIMINO DEFINITIVAMENTE EN EL ESCENARIO */
+                check = false;
+            }
+            else
+            {
+                newTetrimino.transform.position += Vector3.down; // MUEVE UNA UNIDAD ABAJO.
+                check = false;
             }
         }
 
@@ -903,73 +894,65 @@ public class Playground : MonoBehaviour //NUEVA CLASE "Playground" HIJA DE LA CL
                 {
                     CheckPlaygroundLimits(); /* SI ESTÁ FUERA DEL BORDE (COSA QUE DE HECHO AL GIRAR ES HABITUAL)
                                                 QUE LA FUNCIÓN DE CHEQUEO DE BORDES HAGA SU MAGIA Y LO ESCUPA
-                                                DENTRO DE LOS BORDES OTRA VEZ.*/
+                                                DENTRO DE LOS BORDES OTRA VEZ.
+
+                                                ESTE ES EL ÚNICO MOVIMIENTO QUE USA YA LA ANTIGUA FUNCIÓN DE
+                                                COMPROBAR LOS LÍMITES, PUES NO PODEMOS PREDECIR DE FORMA SENCILLA
+                                                DONDE ESTARÁ CADA PIEZA AL GIRAR Y BLOQUEAR SU MOVIMIENTO. */
                 }
             }
 
-            if(tetrimino_graph != null) /* ESTO ES PARA EL SPRITE DE LADRILLO DE LOS TETRIMINOS.
-                HABÍA UN PROBLEMA. LOS LADRILLOS TIENEN LUCES Y SOMBRAS PINTADAS, PERO AL GIRAR
-                EL TETRIMINO, EL DIBUJO GIRA CON ÉL Y LAS "LUCES" SE VAN A LA PUTA POR ALLÁ A LA ARBOLEDA.
-                LA SOLUCIÓN ES QUE POR CADA GIRO, DECIRLE AL SPRITE QUE SE REORIENTE CON EL MUNDO... CHACHO*/
+            for (int i = 0; i < minos.Length; i++) /* FUNCIÓN QUE GIRA EL SPRITE DE LADRILLO EN CADA MINO, CADA
+                VEZ QUE GIRAS EL TETRIMINO */
             {
-                foreach (Transform m in minos) /* POR CADA MINO... */
-                {
-                    m.rotation = Quaternion.identity; /* GÍRAME EL MINO A LA MATRIZ DE GIRO "IDENTIDAD"
-                    BÁSICAMENTE EL GIRO ORIGEN ESTANDAR DEL OBJETO, PERFECTAMENTE ALINEADO CON EL MUNDO.
-                    EA, LADRILLOS PERFECTOS EN CADA GIRO!. */
-                }
+                minos[i].rotation = Quaternion.identity; /* QUATERNION ES UN TIPO DE VARIABLE PARECIDA AL VECTOR
+                PERO QUE SE USA EN GIROS, SI NO ME EQUIVOCO ES UNICA DE UNITY. E IDENTITY, ES BÁSICAMENTE DECIRLE
+                QUE LOS MINOS TENGAN LA ROTACIÓN ORIGINAL (MIRANDO PARRIBA) CON RESPECTO A LAS COORDENADAS DEL MUNDO.*/
             }
 
             foreach (Transform h in minosHelper) /* VAMOS HACER LO MISMO QUE CON EL TETRIMINO DEL JUGADOR PERO
                 CON EL AYUDANTE, PUES ESTA SOMBRA TAMBIÉN SE SALE DEL ESCENARIO E INTERSECTA CON OTROS TETRIMINOS.*/
             {
-                if (h.position.y > 0 && h.position.x > 0 && h.position.x < ancho) /* SI ESTÁ DENTRO DEL ESCENARIO... */
+                if (playground[Mathf.FloorToInt(h.position.x), Mathf.FloorToInt(h.position.y)] != null)
+                    /* Y TOCA A OTRO... */
                 {
-                    if (playground[Mathf.FloorToInt(h.position.x), Mathf.FloorToInt(h.position.y)] != null)
-                        /* Y TOCA A OTRO... */
-                    {
-                        newTetrimino.position += Vector3Int.up; /* PARRIBA DE FORMA ESCURRIDIZA. */
-                        break;
-                    }
-                    else
-                    {
-                        CheckPlaygroundLimits(); /* SI SE SALE DEL ESCENARIO, QUE SE VUELVA A METER. */
-                    }
+                    tetriminoHelper.position += Vector3Int.up; /* PARRIBA DE FORMA ESCURRIDIZA. */
+                    break;
                 }
             }
         }
 
         if(dir.Equals("Drop")) /* DEJAR CAER EL TETRIMINO. */
         {
-            bool isHit = false; /* OTRA VARIABLE PLACEBO. */
+            isHit2 = false; /* OTRA VARIABLE PLACEBO. */
 
-            SoundFX[0].Play(); /* AL DEJAR CAER LA PIEZA, QUE SUENE EL GOLPE */
-
-            while (!isHit) /* SI ES FALSO... */
+            while (!isHit2) /* SI ES FALSO... */
             {
                 foreach (Transform m in minos) /* POR CADA MINO DE TETRIMINO... */
                 {
-                    if (m.position.y > 0) /* SI NO HA TOPADO CON EL SUELO... */
+                    if (m.position.y - 1 < 0 || playground[Mathf.FloorToInt(m.position.x), Mathf.FloorToInt(m.position.y - 1)] != null)
+                        /* PRÁCTICAMENTE LO MISMO QUE EN DOWN, PERO DENTRO DE UN WHILE */
                     {
-                        if (playground[Mathf.FloorToInt(m.position.x), Mathf.FloorToInt(m.position.y)] != null)
-                            /* Y HA TOCADO UN COMPAÑERO... 016. NO! */
-                        {
-                            newTetrimino.position += Vector3Int.up; /* PARRIBA */
-                            UpdatePlayground(); /* PONLO EN playground COMO NUEVO TETRIMINO ESTABLECIDO... */
-
-                            isHit = true; /* SALIDA DE MIERDA. */
-                            return; /* SALIDA TOTAL DE LA FUNCIÓN, PORQUE NO TE DEJA TOCAR MÁS. */
-                        }
-                    }
-                    else
-                    {
-                        isHit = true;
-                        return; /* AQUÍ NO HAY NADA, QUE SE SALGA, PORQUE SI TOCA EL SUELO YA ENTRA
-                        EN LA JURISDICCIÓN DE CheckPlaygroundLimits() */
+                        check = true;
+                        isHit2 = true;
+                        break;
                     }
                 }
 
-                newTetrimino.position += Vector3Int.down; /* SI NO TOCA CON NADA, BAJA EL TETRIMINO HASTA QUE LO HAGA. */
+                if(check)
+                {
+                    UpdatePlayground(); /* ESTABLECEMOS LA PIEZA EN EL ESCENARIO DEFINITIVAMENTE*/
+                    SoundFX[0].Play(); /* AL DEJAR CAER LA PIEZA, QUE SUENE EL GOLPE */
+                    check = false;
+                    isHit2 = true;
+                    return; /* EN ESTA USO UN RETURN, PUESTO QUE ESTA FUNCIÓN UNA VEZ EJECUTADA, 
+                    NO HAY MÁS MOVIMIENTO QUE HACER, ASÍ QUE SALGO DE LA FUNCIÓN DIRECTAMENTE. */
+                }
+                else
+                {
+                    newTetrimino.position += Vector3.down; // MUEVE UNA UNIDAD ABAJO.
+                    check = false;
+                }
             }
         }
     }
@@ -994,16 +977,6 @@ public class Playground : MonoBehaviour //NUEVA CLASE "Playground" HIJA DE LA CL
                 PUEDE SALIRSE POR ABAJO Y POR LOS LADOS, ASÍ QUE COMPRUEBO AMBOS DE FORMA INDEPENDIENTE...*/
             {
                 newTetrimino.position += Vector3Int.up; /* SI TOCA EL SUELO, PARRIBA AL REDIL. */
-                UpdatePlayground(); /* Y AÑÁDAMELO CON LOS OTROS TETRIMINOS. */
-                break;
-            }
-        }
-
-        foreach(Transform h in minosHelper) /* EL AYUDANTE TAMBIÉN SE PUEDE IR PARA ABAJO... ASÍ QUE LO PROPIO. */
-        {
-            if (h.position.y < 0)
-            {
-                tetriminoHelper.position += Vector3Int.up;
                 break;
             }
         }
@@ -1048,20 +1021,17 @@ public class Playground : MonoBehaviour //NUEVA CLASE "Playground" HIJA DE LA CL
 
     public void Down() // FUNCIÓN DE BAJADA DE TETRIMINO.
     {
-        newTetrimino.transform.position += Vector3.down; // MUEVE UNA UNIDAD ABAJO.
         CheckPosition("Down"); /* COMPRUEBA LAS COLISIONES PARA ABAJO */
         elapsedTime = 0f; // PON A 0 EL RELOJ PARA QUE NO SE SOLAPEN LAS BAJADAS DEL TIEMPO Y DEL USUARIO Y CUENTEN POR DOS...
     }
 
     public void Left() // FUNCIÓN DE MOVER IZQUIERDA EL TETRIMINO.
     {
-        newTetrimino.transform.position += Vector3.left; // MUEVE UNA UNIDAD A LA IZQUIERDA.
         CheckPosition("Left"); /* COLISIONES PARA IZQUIERDA. */
     }
 
     public void Right() // LO MISMO PERO A LA DERECHA.
     {
-        newTetrimino.transform.position += Vector3.right;
         CheckPosition("Right"); /* COLISIONES PARA DERECHA */
     }
 

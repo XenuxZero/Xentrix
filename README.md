@@ -14,3 +14,11 @@ so it doesn't use fancy or cpu consuming capabilites like physics or collisions.
 The script is fully commented and extensively explained in detail, but is in Spanish.
 
 Thanks and enjoy!
+
+
+# LIST OF CHANGES (6 FEBRUARY 2020):
+#
+# TWO NEW TETROMINOS: CORNER AND SHORTY.
+# CORRECTED COLORS FOR TETROMINOS THAT WERE TOO SIMILAR.
+# CHANGES IN SCRIPT THAT MAKES IT MORE EFFICIENT FRIENDLY, LESS CHECKS AND ITERATIONS.
+# DELETED USELESS FUNCTIONS.

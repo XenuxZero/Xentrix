@@ -344,7 +344,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -3
-  m_Sprite: {fileID: 21300000, guid: 3079066544d9b8349886638ce8a2e10e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a93bd5620a6cee54f82b3b1b8b4166cd, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0.09803922}
   m_FlipX: 0
   m_FlipY: 0
@@ -364,7 +364,7 @@ Transform:
   m_GameObject: {fileID: 249282565}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 5, y: 10, z: 0}
-  m_LocalScale: {x: 10, y: 20, z: 1}
+  m_LocalScale: {x: 9.999999, y: 19.999998, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -1304,17 +1304,18 @@ MonoBehaviour:
   pause: {fileID: 681960816}
   un_Mute_img: {fileID: 771397858}
   prefabs:
-  - {fileID: 2596955803327964292, guid: b649e92502c6a0c4594669ae264690fe, type: 3}
+  - {fileID: 7558035481484789483, guid: b9acef5cdb9ab0149a85a35cfc5d11cb, type: 3}
   - {fileID: 1566414944796308508, guid: 075a5b2a03ed6f847b6215a07fd418ce, type: 3}
-  - {fileID: 4442270445414804188, guid: 2b9025f6c9e69ff4e989a417b3bea238, type: 3}
+  - {fileID: 6053113141808759071, guid: 2b9025f6c9e69ff4e989a417b3bea238, type: 3}
   - {fileID: 5720489516762137383, guid: 6dc8a67ee6048e74e83feaa3d52a98b8, type: 3}
   - {fileID: 8624337376560439200, guid: 9fd4a04a8ca7d95428101888746576e9, type: 3}
   - {fileID: 4195322071135504507, guid: 73edfb995b9b3a646b76e2d74fd6ae5e, type: 3}
   - {fileID: 5237508997334915099, guid: 932ba920d5a7237419ba9edcbff587d9, type: 3}
+  - {fileID: 7928276262470368809, guid: b1054b18f0feaff4ab026c0c3e19795f, type: 3}
+  - {fileID: 9106735997969406418, guid: b649e92502c6a0c4594669ae264690fe, type: 3}
   - {fileID: 1013975958800092822, guid: 95cae077a78efde4ea9cb506e47c7c72, type: 3}
   isConsecutiveSpawn: 1
   multiplier: {fileID: 1881221526}
-  tetrimino_graph: {fileID: 21300000, guid: c3ed785cb3975cf45804ea9315db0b32, type: 3}
   unMute_graph: {fileID: 21300000, guid: f557476de4a37e04e835eb1b3e1bf26c, type: 3}
   mute_graph: {fileID: 21300000, guid: d8db1e67e6191b2419ffafd3f5d7f81c, type: 3}
   sprinkles: {fileID: 1382038621}

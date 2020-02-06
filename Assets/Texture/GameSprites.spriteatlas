@@ -49,13 +49,11 @@ SpriteAtlas:
     - {fileID: 21300000, guid: d8db1e67e6191b2419ffafd3f5d7f81c, type: 3}
     - {fileID: 21300000, guid: f557476de4a37e04e835eb1b3e1bf26c, type: 3}
     - {fileID: 21300000, guid: c3ed785cb3975cf45804ea9315db0b32, type: 3}
-    - {fileID: 21300000, guid: 3079066544d9b8349886638ce8a2e10e, type: 3}
-    totalSpriteSurfaceArea: 29712
+    totalSpriteSurfaceArea: 29696
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
   - {fileID: 21300000, guid: 42d67d25419670a49981a0682405484d, type: 3}
-  - {fileID: 21300000, guid: 3079066544d9b8349886638ce8a2e10e, type: 3}
   - {fileID: 21300000, guid: e4ff80f54c54f5c45bb93b24340c5e92, type: 3}
   - {fileID: 21300000, guid: d8db1e67e6191b2419ffafd3f5d7f81c, type: 3}
   - {fileID: 21300000, guid: d0751cc785191ca4bbdcac39a63a13db, type: 3}
@@ -65,7 +63,6 @@ SpriteAtlas:
   - {fileID: 21300000, guid: c6af8b4e9f7e97147a46611bec45c877, type: 3}
   m_PackedSpriteNamesToIndex:
   - Drop_tx
-  - Mino
   - Right_tx
   - Mute_tx
   - Down_tx
