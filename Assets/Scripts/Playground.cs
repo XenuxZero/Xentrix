@@ -12,24 +12,24 @@ public class Playground : MonoBehaviour //NUEVA CLASE "Playground" HIJA DE LA CL
     /* ------------------- VARIABLES ------------------- */
 
     //VARIABLES CONSTANTES ENTERAS DE SOLO LECTURA, NO PUEDEN CAMBIAR. DEFINO LAS PUNTUACIONES DE RECOMPENSA.
-    const short BLOCKVALUE = 100; //100 PUNTOS CADA VEZ QUE COLOCO UN BLOQUE EN UN SITIO.
+    const byte BLOCKVALUE = 100; //100 PUNTOS CADA VEZ QUE COLOCO UN BLOQUE EN UN SITIO.
     const int LINEVALUE = 1000; //1000 PUNTOS POR CADA LÍNEA.
 
     const int LEVELVALUE = 10000; //AQUÍ DEFINO LA PUNTUACIÓN NECESARIA PARA PASAR DE NIVEL.
 
-    private short ancho = 10; // DEFINO UN SHORT (VALORES ENTRE 0-255 SIN SIGNO, OCUPA MENOS MEMORIA QUE UN INT) PARA EL ANCHO DEL TABLERO.
-    private short alto = 24; /* LO MISMO PERO PARA EL ALTO. LAS VARIABLES PÚBLICAS SE PUEDEN VER EN EL INSPECTOR DE UNITY!
+    private byte ancho = 10; // DEFINO UN byte (VALORES ENTRE 0-255 SIN SIGNO, OCUPA MENOS MEMORIA QUE UN INT) PARA EL ANCHO DEL TABLERO.
+    private byte alto = 24; /* LO MISMO PERO PARA EL ALTO. LAS VARIABLES PÚBLICAS SE PUEDEN VER EN EL INSPECTOR DE UNITY!
                                PUEDES MODIFICARLAS DENTRO DE UNITY O HACER REFERENCIAS CON UN SIMPLE DRAG AND DROP! */
 
     [Header("Contadores")] // ESTO SIRVE PARA EL INSPECTOR DE UNITY, DIVIDE BLOQUES DE VARIABLES PARA ORDENARLAS.
     public Text score; // HACEMOS PÚBLICA PARA REFERENCIAR EL CAMPO DE TEXTO DE LA PUNTUACIÓN EN UNA VARIABLE TIPO TEXT.
     public Text lvlUnidades; // LO MISMO PERO PARA LAS UNIDADES DEL TEXTO DEL NIVEL.
     public Text lvlDecenas; // LAS DECENAS, LOS SEPARÉ PORQUE VISUALMENTE SE DESCUADRABAN LOS DÍGITOS AL CAMBIAR DE NÚMEROS. TOC.
-    private short unidades; // LAS PRIVADAS SOLO SON ACCESIBLES AQUÍ Y EN ESTA CLASE. UN SHORT PARA LAS UNIDADES.
-    private short decenas; // SHORT PARA LAS DECENAS. CON ESTAS MANEJAREMOS LA LÓGICA, CON LOS TEXTs A NIVEL GRÁFICO.
-    private short currentLevel; // AQUÍ SE GUARDARÁ EL NIVEL ACTUAL. A TIEMPO DE REAL.
-    private short maxLevel; // DEFINIREMOS EL MÁXIMO NIVEL POSIBLE EN EL JUEGO.
-    private int scoreValue; // IRÁ LA PUNTUACIÓN A TIEMPO REAL. UN ENTERO, PUES EL SHORT SE QUEDARÁ IDEM... JE!
+    private byte unidades; // LAS PRIVADAS SOLO SON ACCESIBLES AQUÍ Y EN ESTA CLASE. UN byte PARA LAS UNIDADES.
+    private byte decenas; // byte PARA LAS DECENAS. CON ESTAS MANEJAREMOS LA LÓGICA, CON LOS TEXTs A NIVEL GRÁFICO.
+    private byte currentLevel; // AQUÍ SE GUARDARÁ EL NIVEL ACTUAL. A TIEMPO DE REAL.
+    private byte maxLevel; // DEFINIREMOS EL MÁXIMO NIVEL POSIBLE EN EL JUEGO.
+    private int scoreValue; // IRÁ LA PUNTUACIÓN A TIEMPO REAL. UN ENTERO, PUES EL byte SE QUEDARÁ IDEM... JE!
     private int nTimesLevelScore; // CUENTA LAS VECES QUE PASAMOS DE PUNTUACIÓN (10000) COMO PARA UNA SUBIDA DE NIVEL.
 
     [Header("Botones")]
@@ -69,7 +69,7 @@ public class Playground : MonoBehaviour //NUEVA CLASE "Playground" HIJA DE LA CL
     private float speedUpTime; /* AQUÍ DEFINO LOS MILISEGUNDOS QUE DEBE REDUCIR timerLimit PARA ACORTAR LOS TICS DEL RELOJ
                                   CADA VEZ QUE SUBAS DE NIVEL Y ASÍ HACER EL JUEGO MÁS RÁPIDO. */
 
-    private short nBlocks; // NÚMERO DE BLOQUES QUE SE USARÁN EN XENTRIX. MODIFICABLE AÑADIENDO NUEVOS.
+    private byte nBlocks; // NÚMERO DE BLOQUES QUE SE USARÁN EN XENTRIX. MODIFICABLE AÑADIENDO NUEVOS.
 
     private bool isGameOver; // ESTÁ EL JUEGO EN MODO GAME OVER?
     private bool isPaused; // ESTÁ PAUSADO?
@@ -78,13 +78,13 @@ public class Playground : MonoBehaviour //NUEVA CLASE "Playground" HIJA DE LA CL
     private float lineSpeed; // AQUÍ DEFINO LA VELOCIDAD CON LA QUE LAS LÍNEAS SE ELIMINAN O CAMBIAN DE COLOR (A BLANCO).
 
     // OTRO RELOJ, PERO ESTA VEZ CALCULA EL TIEMPO DE BONUS (2s) QUE TE DOY PARA QUE SUMES EL MULTIPLICADOR.
-    private short bonusTimerLimit; // LÍMITE DE TIC. 2 SEGUNDOS.
-    private short bonusMultiplier; // VALOR DE MULTIPLICADOR DE PUNTUACIÓN, A PARTIR DEL x2 SE CUENTA YA QUE: 1000 x x1 = 1000.
+    private byte bonusTimerLimit; // LÍMITE DE TIC. 2 SEGUNDOS.
+    private byte bonusMultiplier; // VALOR DE MULTIPLICADOR DE PUNTUACIÓN, A PARTIR DEL x2 SE CUENTA YA QUE: 1000 x x1 = 1000.
 
     private bool isBonusTime; // ESTÁ EL JUEGO EN MODO BONO POR MULTILÍNEA? Y AQUÍ EMPEZAMOS A CONTAR LOS 2 SEGUNDOS.
 
     private float elapsedBonusTime; // EL TIEMPO QUE HA TRANSCURRIDO EN EJECUCIÓN.
-    private short bonusFontSize; /* AQUÍ CAMBIO EL TAMAÑO DE LA FUENTE DEL TESTIGO GRÁFICO PARA HACERLO MÁS GRANDE A CUANTA
+    private byte bonusFontSize; /* AQUÍ CAMBIO EL TAMAÑO DE LA FUENTE DEL TESTIGO GRÁFICO PARA HACERLO MÁS GRANDE A CUANTA
                                   MÁS LÍNEAS HAYAS HECHO. */
 
     public Text multiplier; // REFERENCIA AL TESTIGO GRÁFICO DEL MULTIPLICADOR.
@@ -92,7 +92,7 @@ public class Playground : MonoBehaviour //NUEVA CLASE "Playground" HIJA DE LA CL
                                      BÁSICAMENTE SIRVE PARA MANTENER EL TESTIGO EN EL CENTRO CUANDO LE DE EL TEMBLEQUE Y
                                      NO SE VAYA FUERA DEL ESCENARIO COMO HA HECHO OTRAS VECES...*/
 
-    private int blockSelected; // AQUÍ SE GUARDA EL TETRIMINO SELECCIONADO.
+    private byte blockSelected; // AQUÍ SE GUARDA EL TETRIMINO SELECCIONADO.
 
     [Header("Sprites Estéticos")]
     public Sprite unMute_graph; /* REFERENCIA AL SPRITE DE UNMUTE PARA EL BOTÓN DE SILENCIAR MÚSICA. */
@@ -165,7 +165,7 @@ public class Playground : MonoBehaviour //NUEVA CLASE "Playground" HIJA DE LA CL
         speedUpTime = 0.025f; // TIEMPO DE ACORTE DE TIC DE RELOJ PARA IR MÁS RÁPIDO CADA VEZ QUE PASAS DE NIVEL.
         scoreValue = 0; // VALOR DE PUNTUACIÓN A 0.
         nTimesLevelScore = 0; // 0 VECES PASAMOS LA PUNTUACIÓN DE 10000.
-        nBlocks = (short) prefabs.Length; // NÚMERO DE TETRIMINOS QUE ENTRARÁN EN JUEGO, ASÍ AÑADÍ EL PEQUEÑO. PUEDES AÑADIR LOS QUE QUIERAS.
+        nBlocks = (byte) prefabs.Length; // NÚMERO DE TETRIMINOS QUE ENTRARÁN EN JUEGO, ASÍ AÑADÍ EL PEQUEÑO. PUEDES AÑADIR LOS QUE QUIERAS.
         newTetrimino = null; // INICIALIZO LA PIEZA JUGABLE A NULO.
         tetriminoHelper = null; /* INICIALIZO EL AYUDANTE A NULO. */
         isPaused = true; // EL JUEGO COMIENZA PAUSADO ASÍ QUE INICIALIZO A TRUE.
@@ -175,7 +175,7 @@ public class Playground : MonoBehaviour //NUEVA CLASE "Playground" HIJA DE LA CL
         isBonusTime = false; // INICIAMOS A FALSO EL TIEMPO DE BONO POR MULTILÍNEA.
         elapsedBonusTime = 0f; // A 0 EL TIEMPO TRANSCURRIDO EN EJECUCIÓN.
         bonusTimerLimit = 2; // LOS SEGUNDOS MÁXIMOS DE TIEMPO DE BONUS.
-        blockSelected = -1; /* INICIALIZO EL TETRIMINO SELECCIONADO A -1 */
+        blockSelected = 100; /* INICIALIZO EL TETRIMINO SELECCIONADO A 100 */
         vectorOrigin = new Vector3(multiplier.transform.position.x, multiplier.transform.position.y, 0f); /* ESTABLEZCO LA POSICIÓN ORIGEN
                                                                                                              DEL TESTIGO DEL MULTIPLICADOR
                                                                                                              PARA QUE NO SE MUEVA DEL SITIO
@@ -275,9 +275,9 @@ public class Playground : MonoBehaviour //NUEVA CLASE "Playground" HIJA DE LA CL
 
     private void GeneratePlayground() // ESTA FUNCIÓN GENERA EL TABLERO SEGUN EL ALTO Y EL ANCHO.
     {
-        for (short y = 0; y < alto; y++) // AQUÍ NO HAY MUCHO QUE DECIR... DE 0 HASTA 24...
+        for (byte y = 0; y < alto; y++) // AQUÍ NO HAY MUCHO QUE DECIR... DE 0 HASTA 24...
         {
-            for (short x = 0; x < ancho; x++) // DE 0 HASTA 10...
+            for (byte x = 0; x < ancho; x++) // DE 0 HASTA 10...
             {
                 playground[x, y] = null; // A LA MATRIZ 2D DE VALOR HORIZONTAL "X" Y VERTICAL "Y", INICIALÍZALOS A NULO TODOS.
                 /* QUICIR, HAZME UN TABLERO VACÍO DE 10 X 24 HUECOS NULOS, MÁS ADELANTE SE IRÁN LLENANDO DE GameObjects, EN
@@ -320,7 +320,7 @@ public class Playground : MonoBehaviour //NUEVA CLASE "Playground" HIJA DE LA CL
         }
     }
 
-    private int ConsecutiveSpawn(bool toggle) /* ESTA FUNCIÓN DES/ACTIVA LA REPETICIÓN CONSECUTIVA DE TETRIMINOS EN
+    private byte ConsecutiveSpawn(bool toggle) /* ESTA FUNCIÓN DES/ACTIVA LA REPETICIÓN CONSECUTIVA DE TETRIMINOS EN
                                                  Spawner(). EN "true" DE FORMA PREDETERMINADA, JUEGO NORMAL.
                                                  AL ESTAR ACTIVA, PERMITE MAYOR PROBABILIDAD DE CONSEGUIR
                                                  MULTIPLICADORES ALTOS, PERO A LA VEZ SE COMPENSA CON QUE PARA
@@ -331,13 +331,13 @@ public class Playground : MonoBehaviour //NUEVA CLASE "Playground" HIJA DE LA CL
                                                  ¿SE PODRÍA ACTIVAR SIBILINAMENTE EN NIVELES ALTOS?
                                                  https://youtu.be/-oAQDMOm88w */
     {
-        int rnd; /* CREO UN ENTERO PARA UN VALOR RANDOM... */
+        byte rnd; /* CREO UN ENTERO PARA UN VALOR RANDOM... */
 
         if (!toggle) /* SI EL VALOR QUE SE PASA POR ARGUMENTOS ES FALSE... QUICIR ESTÁ DESACTIVADO. */
         {
             do /* HAZ... */
             {
-                rnd = Random.Range(0, nBlocks); /* SIGUE PILLANDO UN NÚMERO RANDOM... */
+                rnd = (byte)Random.Range(0, nBlocks); /* SIGUE PILLANDO UN NÚMERO RANDOM... */
             }
             while (blockSelected == rnd); /* MIENTRAS QUE LO QUE ELIJAS SEA IGUAL A LO QUE ELEGISTE ANTERIORMENTE. */
 
@@ -347,7 +347,7 @@ public class Playground : MonoBehaviour //NUEVA CLASE "Playground" HIJA DE LA CL
         }
         else
         {
-            return rnd = Random.Range(0, nBlocks); /* SI ESTÁ ACTIVADO EL MODO CONSECUTIVO "MODO NORMAL"...
+            return rnd = (byte)Random.Range(0, nBlocks); /* SI ESTÁ ACTIVADO EL MODO CONSECUTIVO "MODO NORMAL"...
                                                       PILLA UN NÚMERO RANDOM COMO SIEMPRE Y DEVUÉLVELO. */
         }
     }
@@ -376,7 +376,7 @@ public class Playground : MonoBehaviour //NUEVA CLASE "Playground" HIJA DE LA CL
                                                       PARA SUS MINOS CON EL NÚMERO DE MINOS DE newTetrimino. */
 
 
-        for (short i = 0; i < newTetrimino.childCount; i++) // BÁSICAMENTE DE 0 A nMINOS...
+        for (byte i = 0; i < newTetrimino.childCount; i++) // BÁSICAMENTE DE 0 A nMINOS...
         {
             minos[i] = newTetrimino.GetChild(i); /* VE METIENDO LOS HIJOS EN UNA MATRIZ DE HIJOS. PARA LUEGO GESTIONARLOS
                                                     INDIVIDUALMENTE. */
@@ -393,7 +393,7 @@ public class Playground : MonoBehaviour //NUEVA CLASE "Playground" HIJA DE LA CL
         SpriteRenderer mRend; /* CREO UNA VARIABLE TEMPORAL TIPO SpriteRenderer QUE LA QUE USA UNITY PARA RENDERIZAR LOS
                                  SPRITES. */
 
-        for (short i = 0; i < tetriminoHelper.childCount; i++) /* POR CADA MINO DEL AYUDANTE... */
+        for (byte i = 0; i < tetriminoHelper.childCount; i++) /* POR CADA MINO DEL AYUDANTE... */
         {
             mRend = minosHelper[i].GetComponent<SpriteRenderer>(); /* PILLO LA REFERENCIA DEL COMPONENTE SpriteRenderer
                                                                       DE CADA MINO Y LA METO TEMPORALMENTE EN mRend
@@ -410,7 +410,7 @@ public class Playground : MonoBehaviour //NUEVA CLASE "Playground" HIJA DE LA CL
         tetriminoHelper.position = newTetrimino.position; /* LA POSICIÓN DEL AYUDANTE ES LA MISMA QUE LA DEL JUGADOR... */
         tetriminoHelper.rotation = newTetrimino.rotation; /* QUE LA ROTACIÓN TAMBIÉN SEA LA MISMA... */
 
-        for (int i = 0; i < minos.Length; i++) /* GIRO LOS SPRITES DE CADA MINO DEL AYUDANTE PARA QUE MIREN HACIA EL MISMO
+        for (byte i = 0; i < minos.Length; i++) /* GIRO LOS SPRITES DE CADA MINO DEL AYUDANTE PARA QUE MIREN HACIA EL MISMO
             SITIO QUE EL ORIGINAL. */
         {
             minosHelper[i].rotation = minos[i].rotation;
@@ -558,7 +558,7 @@ public class Playground : MonoBehaviour //NUEVA CLASE "Playground" HIJA DE LA CL
                    ASÍ QUE ME AHORRO REDUNDANCIAS DE CÓDIGO SI PONGO LA FUNCIÓN DEL BOTÓN ABAJO */
     }
 
-    private void CheckGameOver(int y) // FUNCIÓN QUE COMPRUEBA SI ESTAMOS EN UNA SITUACIÓN DE GAME OVER.
+    private void CheckGameOver(byte y) // FUNCIÓN QUE COMPRUEBA SI ESTAMOS EN UNA SITUACIÓN DE GAME OVER.
     {
         if(y > alto -5) /* LE PASAMOS POR ARGUMENTOS LA LÍNEA QUE OCUPA CADA MINO EN VERTICAL AL ESTABLECER LA PIEZA Y, SI SOBREPASA
                       EL TECHO... */
@@ -571,9 +571,9 @@ public class Playground : MonoBehaviour //NUEVA CLASE "Playground" HIJA DE LA CL
 
     private void UpdatePlayground() // ESTA FUNCIÓN ESTABLECE DEFINITIVAMENTE LOS TETRIMINOS SOBRE EL playground.
     {
-        for (short i = 0; i < minos.Length; i++) // POR CADA MINO DEL TETRIMINO...
+        for (byte i = 0; i < minos.Length; i++) // POR CADA MINO DEL TETRIMINO...
         {
-            CheckGameOver(Mathf.FloorToInt(minos[i].position.y)); /* MIRA A VER SI ALGÚN MINO ESTÁ EN ZONA DE GAME OVER, HAZ EL FAVOR.
+            CheckGameOver((byte)Mathf.FloorToInt(minos[i].position.y)); /* MIRA A VER SI ALGÚN MINO ESTÁ EN ZONA DE GAME OVER, HAZ EL FAVOR.
                                                                      Mathf.FloorToInt() BÁSICAMENTE TRUNCA LOS VALORES AL ENTERO MÁS
                                                                      CERCANO, POR SI ALGUNA PIEZA ES DE ESAS CON POSICIÓN NO ENTERA */
 
@@ -613,11 +613,11 @@ public class Playground : MonoBehaviour //NUEVA CLASE "Playground" HIJA DE LA CL
                                                  FUNCIÓN QUE DEVUELVE UN IEnumerator, COMPRUEBA SI HEMOS HECHO LÍNEAS HORIZONTALES.
                                                  LAS CORRUTINAS DEBEN TENER SI O SI "yield" EN ALGÚN LADO O DARÁ ERROR */
     {
-        for (short y = 0; y < alto - 3; y++) // VERTICALMENTE, DE ABAJO A ARRIBA, DE 0 AL MARCO SUPERIOR...
+        for (byte y = 0; y < alto - 3; y++) // VERTICALMENTE, DE ABAJO A ARRIBA, DE 0 AL MARCO SUPERIOR...
         {
             bool isNull = false; // CREO UNA COMPROBACIÓN DE SI ES NULO. PARA SABER SI LA LÍNEA HORIZONTAL ESTÁ LLENA O NO DE MINOS.
 
-            for (short x = 0; x < ancho; x++) // HORIZONTALMENTE, DE 0 AL ANCHO...
+            for (byte x = 0; x < ancho; x++) // HORIZONTALMENTE, DE 0 AL ANCHO...
             {
                 if (playground[x, y] == null) // SI ALGUNA POSICIÓN DE UNA DETERMINADA LÍNEA HORIZONTAL TIENE UN HUECO VACÍO...
                 {
@@ -630,7 +630,7 @@ public class Playground : MonoBehaviour //NUEVA CLASE "Playground" HIJA DE LA CL
             {
                 isBonusTime = true; // IT'S BONUS TIME!
 
-                for (short x = 0; x < ancho; x++) // CADA MINO DE ESTA LÍNEA ACTUAL LLENA...
+                for (byte x = 0; x < ancho; x++) // CADA MINO DE ESTA LÍNEA ACTUAL LLENA...
                 {
                     SpriteRenderer sr; /* CREO UNA VARIABLE TEMPORAL... */
                     sr = playground[x, y].GetComponent<SpriteRenderer>(); /* METO LA REFERENCIA DEL SPRITE DE CADA MINO... */
@@ -646,7 +646,7 @@ public class Playground : MonoBehaviour //NUEVA CLASE "Playground" HIJA DE LA CL
 
                 SoundFX[1].Play(); /* LE DOY AL PLAY AL SONIDO DE HACER LÍNEA DE LA MATRIZ DE EFECTOS. */
 
-                for (short x = 0; x < ancho; x++) // LUEGO DE CAMBIAR EL COLOR DE CADA MINO, DA OTRA PASADA A LA LÍNEA.
+                for (byte x = 0; x < ancho; x++) // LUEGO DE CAMBIAR EL COLOR DE CADA MINO, DA OTRA PASADA A LA LÍNEA.
                 {
                     Destroy(playground[x, y].gameObject); // Y CÁRGATE LAS REPRESENTACIONES GRÁFICAS, OJO, DE LOS MINOS.
                     playground[x, y] = null; // MARCAMOS LA LÍNEA COMO NULOS.
@@ -719,12 +719,12 @@ public class Playground : MonoBehaviour //NUEVA CLASE "Playground" HIJA DE LA CL
         StopCoroutine(MultiplierUI()); // COMO EN LA ANTERIOR CORRUTINA, CUANDO TERMINE DE SU TRABAJO, SUICIDIO.
     }
 
-    private void BlockFalling(short y) // LA FUNCIÓN QUE SE ENCARGA DE BAJAR LOS MINOS SUPERIORES A UNA LÍNEA ELIMINADA.
+    private void BlockFalling(byte y) // LA FUNCIÓN QUE SE ENCARGA DE BAJAR LOS MINOS SUPERIORES A UNA LÍNEA ELIMINADA.
     {
-        for (short i = y; i < alto - 3; i++) /* LE PASO LA POSICIÓN VERTICAL DE LA LÍNEA ELIMINADA POR ARGUMENTOS Y A PARTIR DE AHÍ
+        for (byte i = y; i < alto - 3; i++) /* LE PASO LA POSICIÓN VERTICAL DE LA LÍNEA ELIMINADA POR ARGUMENTOS Y A PARTIR DE AHÍ
                                               HACIA ARRIBA HASTA EL BORDE SUPERIOR. */ 
         {
-            for (short j = 0; j < ancho; j++) // HORIZONTALMENTE...
+            for (byte j = 0; j < ancho; j++) // HORIZONTALMENTE...
             {
                 playground[j, i] = playground[j, i + 1]; /* BÁSICAMENTE, HAZ QUE LA POSICIÓN QUE HA QUEDADO VACANTE, SE LLENE
                                                             CON UN CLON DE LA POSICIÓN QUE TIENE ENCIMA.*/
@@ -748,7 +748,7 @@ public class Playground : MonoBehaviour //NUEVA CLASE "Playground" HIJA DE LA CL
 
         if(nTimesLevelScore < levelTimes) // SI LAS VECES QUE HEMOS PASADO LOS 10000 PTS ES MENOR QUE LAS VECES ACTUALES...
         {
-            for (short i = 0; i < levelTimes-nTimesLevelScore; i++) /* EN TEORÍA ESTO DETERMINA SI HEMOS PASADO MÁS DE UN NIVEL
+            for (byte i = 0; i < levelTimes-nTimesLevelScore; i++) /* EN TEORÍA ESTO DETERMINA SI HEMOS PASADO MÁS DE UN NIVEL
                                                                        A LA VEZ... SI, HAY QUE JUGAR COMO UN JAPONÉS FLIPAO PARA
                                                                        QUE GANES LOS SUFICIENTES PUNTOS DEL TIRÓN COMO PARA SUBIR
                                                                        MÁS DE UN NIVEL A LA VEZ... PERO BUENO AHÍ ESTÁ, POR SI ACASO.
@@ -902,7 +902,7 @@ public class Playground : MonoBehaviour //NUEVA CLASE "Playground" HIJA DE LA CL
                 }
             }
 
-            for (int i = 0; i < minos.Length; i++) /* FUNCIÓN QUE GIRA EL SPRITE DE LADRILLO EN CADA MINO, CADA
+            for (byte i = 0; i < minos.Length; i++) /* FUNCIÓN QUE GIRA EL SPRITE DE LADRILLO EN CADA MINO, CADA
                 VEZ QUE GIRAS EL TETRIMINO */
             {
                 minos[i].rotation = Quaternion.identity; /* QUATERNION ES UN TIPO DE VARIABLE PARECIDA AL VECTOR
@@ -986,7 +986,7 @@ public class Playground : MonoBehaviour //NUEVA CLASE "Playground" HIJA DE LA CL
                                 CONTENEDOR DE TETRIMINOS Y MINOS GRÁFICOS, COMO MÉTODO DE ORDENACIÓN. LA UTILIZO PARA REINICIAR.
                                 EL TABLERO. */
     {
-        for (short y = 0; y < this.transform.childCount; y++) /* DE 0 A CANTIDAD DE HIJOS DE Grid QUE HAGO REFERENCIA CON this
+        for (byte y = 0; y < this.transform.childCount; y++) /* DE 0 A CANTIDAD DE HIJOS DE Grid QUE HAGO REFERENCIA CON this
                                                                  PORQUE ESTE SCRIPT ESTÁ IMPLEMENTADO EN Grid...*/
         {
             Destroy(this.transform.GetChild(y).gameObject); // DESTRUYE TODOS LOS GameObjects QUE HAYA. NO DEJES "TÍTERE CON TINIEBLA" - PaquiQuotes(c) 2020
