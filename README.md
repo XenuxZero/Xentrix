@@ -19,6 +19,8 @@ so it doesn't use fancy or cpu consuming capabilites like physics or collisions.
 
 <p>Thanks and enjoy!</p>
 </br></br>
+<img src="https://i.imgur.com/cpaveQQ.jpg">
+</br></br>
  <b>
  LIST OF CHANGES (06/02/2020):</br>
 <ul>
